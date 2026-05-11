@@ -1,0 +1,35 @@
+{{- if gt (len .Values.karmada.targetClusters) 1 }}
+{{- $fullname := include "app.fullname" . }}
+apiVersion: policy.karmada.io/v1alpha1
+kind: OverridePolicy
+metadata:
+  name: {{ $fullname }}-steps
+  namespace: {{ .Values.namespace }}
+spec:
+  resourceSelectors:
+    - apiVersion: argoproj.io/v1alpha1
+      kind: Rollout
+      name: {{ $fullname }}
+      namespace: {{ .Values.namespace }}
+  overrideRules:
+    {{- range $idx, $cluster := .Values.karmada.targetClusters }}
+    {{- if gt $idx 0 }}
+    {{- $cc := index $.Values.canary.clusters $idx }}
+    - targetCluster:
+        clusterNames:
+          - {{ $cluster }}
+      overriders:
+        plaintext:
+          - path: /spec/strategy/canary/steps
+            operator: replace
+            value:
+              {{- range $cc.steps }}
+              - setWeight: {{ . }}
+              - pause: {}
+              {{- end }}
+          - path: /spec/strategy/canary/analysis/startingStep
+            operator: replace
+            value: {{ $cc.analysisStartingStep }}
+    {{- end }}
+    {{- end }}
+{{- end }}

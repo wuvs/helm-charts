@@ -1,0 +1,41 @@
+nameOverride: ""
+fullnameOverride: ""
+
+replicas: 10
+
+image:
+  repository: nginx
+  tag: "1.27"
+  digest: ""
+  pullPolicy: IfNotPresent
+
+service:
+  port: 80
+
+namespace: nginx-demo
+
+karmada:
+  targetClusters:
+    - member-1a
+    - member-2a
+
+# Per-cluster canary configuration. Index must align with karmada.targetClusters.
+# Kaldera computes steps and analysisStartingStep from the fill-order algorithm
+# based on replicas, numClusters, and globalSteps.
+#
+# Fill-order for globalSteps=[10,25,50,75,100], 10 replicas, 2 clusters (5 each):
+#   10% → 1 pod  → m1=20%,  m2=0%
+#   25% → 3 pods → m1=60%,  m2=0%
+#   50% → 5 pods → m1=100%, m2=0%
+#   75% → 8 pods → m1=100%, m2=60%
+#  100% →10 pods → m1=100%, m2=100%
+canary:
+  clusters:
+    - steps: [20, 60, 100, 100, 100]
+      analysisStartingStep: 1
+    - steps: [0, 0, 0, 60, 100]
+      analysisStartingStep: 7  # (3 leading zeros × 2) + 1
+
+failover:
+  tolerationSeconds: 30
+  gracePeriodSeconds: 60

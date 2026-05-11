@@ -1,0 +1,5 @@
+apiVersion: v2
+name: app
+description: Standard application chart with Argo Rollouts canary strategy for Karmada federation
+type: application
+version: 3.0.0

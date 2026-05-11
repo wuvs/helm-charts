@@ -1,0 +1,51 @@
+{{- $perCluster := div .Values.replicas (len .Values.karmada.targetClusters) }}
+{{- $primary := index .Values.canary.clusters 0 }}
+{{- $fullname := include "app.fullname" . }}
+apiVersion: argoproj.io/v1alpha1
+kind: Rollout
+metadata:
+  name: {{ $fullname }}
+  namespace: {{ .Values.namespace }}
+  labels:
+    app: {{ $fullname }}
+    app.kubernetes.io/managed-by: {{ .Release.Service }}
+spec:
+  replicas: {{ $perCluster }}
+  selector:
+    matchLabels:
+      app: {{ $fullname }}
+  template:
+    metadata:
+      labels:
+        app: {{ $fullname }}
+    spec:
+      containers:
+        - name: {{ $fullname }}
+          image: {{ .Values.image.repository }}:{{ .Values.image.tag }}
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          ports:
+            - containerPort: 80
+          readinessProbe:
+            httpGet:
+              path: /
+              port: 80
+            initialDelaySeconds: 5
+            periodSeconds: 5
+  strategy:
+    canary:
+      analysis:
+        templates:
+          - templateName: canary-readiness
+            clusterScope: true
+        startingStep: {{ $primary.analysisStartingStep }}
+        args:
+          - name: canary-hash
+            valueFrom:
+              podTemplateHashValue: Latest
+          - name: namespace
+            value: {{ .Values.namespace }}
+      steps:
+        {{- range $primary.steps }}
+        - setWeight: {{ . }}
+        - pause: {}
+        {{- end }}

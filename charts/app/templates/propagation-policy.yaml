@@ -1,0 +1,40 @@
+{{- $fullname := include "app.fullname" . }}
+apiVersion: policy.karmada.io/v1alpha1
+kind: PropagationPolicy
+metadata:
+  name: {{ $fullname }}
+  namespace: {{ .Values.namespace }}
+spec:
+  propagateDeps: true
+  resourceSelectors:
+    - apiVersion: argoproj.io/v1alpha1
+      kind: Rollout
+      name: {{ $fullname }}
+      namespace: {{ .Values.namespace }}
+    - apiVersion: v1
+      kind: Service
+      name: {{ $fullname }}
+      namespace: {{ .Values.namespace }}
+  placement:
+    clusterAffinity:
+      clusterNames:
+        {{- range .Values.karmada.targetClusters }}
+        - {{ . }}
+        {{- end }}
+    clusterTolerations:
+      - key: cluster.karmada.io/not-ready
+        operator: Exists
+        effect: NoExecute
+        tolerationSeconds: {{ .Values.failover.tolerationSeconds }}
+      - key: cluster.karmada.io/unreachable
+        operator: Exists
+        effect: NoExecute
+        tolerationSeconds: {{ .Values.failover.tolerationSeconds }}
+  failover:
+    cluster:
+      purgeMode: Gracefully
+    application:
+      decisionConditions:
+        tolerationSeconds: {{ .Values.failover.tolerationSeconds }}
+      purgeMode: Gracefully
+      gracePeriodSeconds: {{ .Values.failover.gracePeriodSeconds }}

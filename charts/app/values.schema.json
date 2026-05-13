@@ -75,6 +75,22 @@
         "replicas": {
             "type": "integer"
         },
+        "rollout": {
+            "type": "object",
+            "properties": {
+                "revisionHistoryLimit": {
+                    "type": "integer"
+                },
+                "rollbackWindow": {
+                    "type": "object",
+                    "properties": {
+                        "revisions": {
+                            "type": "integer"
+                        }
+                    }
+                }
+            }
+        },
         "service": {
             "type": "object",
             "properties": {

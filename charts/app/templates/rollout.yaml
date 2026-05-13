@@ -10,6 +10,10 @@ metadata:
     app: {{ $fullname }}
     app.kubernetes.io/managed-by: {{ .Release.Service }}
 spec:
+  revisionHistoryLimit: {{ .Values.rollout.revisionHistoryLimit }}
+  rollbackWindow:
+    revisions: {{ .Values.rollout.rollbackWindow.revisions }}
+
   replicas: {{ $perCluster }}
   selector:
     matchLabels:

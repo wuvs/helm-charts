@@ -34,8 +34,13 @@ canary:
     - steps: [20, 60, 100, 100, 100]
       analysisStartingStep: 1
     - steps: [0, 0, 0, 60, 100]
-      analysisStartingStep: 7  # (3 leading zeros × 2) + 1
+      analysisStartingStep: 7 # (3 leading zeros × 2) + 1
 
 failover:
   tolerationSeconds: 30
   gracePeriodSeconds: 60
+
+rollout:
+  revisionHistoryLimit: 5
+  rollbackWindow:
+    revisions: 3

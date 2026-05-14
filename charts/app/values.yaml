@@ -46,3 +46,5 @@ rollout:
     revisions: 3
 
 env: []
+
+resources: {}

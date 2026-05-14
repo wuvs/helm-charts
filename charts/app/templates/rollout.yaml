@@ -13,7 +13,6 @@ spec:
   revisionHistoryLimit: {{ .Values.rollout.revisionHistoryLimit }}
   rollbackWindow:
     revisions: {{ .Values.rollout.rollbackWindow.revisions }}
-
   replicas: {{ $perCluster }}
   selector:
     matchLabels:
@@ -27,6 +26,10 @@ spec:
         - name: {{ $fullname }}
           image: {{ .Values.image.repository }}:{{ .Values.image.tag }}
           imagePullPolicy: {{ .Values.image.pullPolicy }}
+          {{- if .Values.env }}
+          env:
+{{- toYaml .Values.env | nindent 12 }}
+          {{- end }}
           ports:
             - containerPort: 80
           readinessProbe:

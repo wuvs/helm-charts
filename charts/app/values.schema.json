@@ -24,6 +24,9 @@
                 }
             }
         },
+        "env": {
+            "type": "array"
+        },
         "failover": {
             "type": "object",
             "properties": {

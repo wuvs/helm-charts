@@ -19,6 +19,8 @@ spec:
       app: {{ $fullname }}
   template:
     metadata:
+      annotations:
+        kubectl.kubernetes.io/default-container: {{ $fullname }}
       labels:
         app: {{ $fullname }}
     spec:

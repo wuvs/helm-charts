@@ -45,6 +45,15 @@ rollout:
   rollbackWindow:
     revisions: 3
 
+mesh:
+  enabled: true
+consulAgent:
+  enabled: false
+vaultAgent:
+  enabled: false
+opa:
+  enabled: false
+
 env: []
 
 resources: {}

@@ -22,6 +22,33 @@ spec:
       labels:
         app: {{ $fullname }}
     spec:
+      {{- if or .Values.mesh.enabled .Values.consulAgent.enabled .Values.vaultAgent.enabled .Values.opa.enabled }}
+      initContainers:
+        {{- if .Values.mesh.enabled }}
+        - name: mesh
+          image: alpine:3
+          command: ["sleep", "infinity"]
+          restartPolicy: Always
+        {{- end }}
+        {{- if or .Values.consulAgent.enabled .Values.opa.enabled }}
+        - name: consul
+          image: alpine:3
+          command: ["sleep", "infinity"]
+          restartPolicy: Always
+        {{- end }}
+        {{- if .Values.vaultAgent.enabled }}
+        - name: vault
+          image: alpine:3
+          command: ["sleep", "infinity"]
+          restartPolicy: Always
+        {{- end }}
+        {{- if .Values.opa.enabled }}
+        - name: opa
+          image: alpine:3
+          command: ["sleep", "infinity"]
+          restartPolicy: Always
+        {{- end }}
+      {{- end }}
       containers:
         - name: {{ $fullname }}
           image: {{ .Values.image.repository }}:{{ .Values.image.tag }}

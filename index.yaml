@@ -2,6 +2,16 @@ apiVersion: v1
 entries:
   app:
   - apiVersion: v2
+    created: "2026-05-17T05:27:29.546718635Z"
+    description: Standard application chart with Argo Rollouts canary strategy for
+      Karmada federation
+    digest: ad8750c40bc073f7f2bd6811793bfcb66352776fe6b527b90d66a9554142cb9b
+    name: app
+    type: application
+    urls:
+    - https://github.com/wuvs/helm-charts/releases/download/app-4.0.6/app-4.0.6.tgz
+    version: 4.0.6
+  - apiVersion: v2
     created: "2026-05-17T04:59:05.38947778Z"
     description: Standard application chart with Argo Rollouts canary strategy for
       Karmada federation
@@ -71,4 +81,4 @@ entries:
     urls:
     - https://github.com/wuvs/helm-charts/releases/download/app-3.5.0/app-3.5.0.tgz
     version: 3.5.0
-generated: "2026-05-17T04:59:05.389500764Z"
+generated: "2026-05-17T05:27:29.546746251Z"

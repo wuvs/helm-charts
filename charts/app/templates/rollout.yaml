@@ -73,6 +73,8 @@ spec:
             periodSeconds: 5
   strategy:
     canary:
+      maxSurge: {{ .Values.rollout.maxSurge }}
+      maxUnavailable: {{ .Values.rollout.maxUnavailable }}
       analysis:
         templates:
           - templateName: canary-readiness

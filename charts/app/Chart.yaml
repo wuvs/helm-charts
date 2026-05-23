@@ -2,4 +2,4 @@ apiVersion: v2
 name: app
 description: Standard application chart with Argo Rollouts canary strategy for Karmada federation
 type: application
-version: 4.0.6
+version: 4.0.7

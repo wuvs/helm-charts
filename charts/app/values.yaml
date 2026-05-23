@@ -44,6 +44,8 @@ rollout:
   revisionHistoryLimit: 5
   rollbackWindow:
     revisions: 3
+  maxSurge: "10%"
+  maxUnavailable: "0%"
 
 mesh:
   enabled: true
